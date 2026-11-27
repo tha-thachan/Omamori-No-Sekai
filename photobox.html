@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Photobox · Omamori no Sekai お守りの世界</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Shippori+Mincho:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #fbf6f9;
+      --surface: #ffffff;
+      --surface-soft: #fcecf4;
+      --ink: #251f2f;
+      --muted: #695f75;
+      --line: rgba(152, 118, 152, 0.16);
+      --accent: #c45788;
+      --accent-soft: #fcebf3;
+      --accent-ink: #ffffff;
+      --header-bg: rgba(251, 246, 249, 0.86);
+      --shadow: 0 10px 28px rgba(108, 66, 102, 0.08);
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    [data-theme="dark"] {
+      --bg: #17141f;
+      --surface: #211d2c;
+      --surface-soft: #2e1e2b;
+      --ink: #f4eef7;
+      --muted: #b3a7c2;
+      --line: rgba(210, 178, 218, 0.16);
+      --accent: #ea8eb9;
+      --accent-soft: rgba(234, 142, 185, 0.16);
+      --accent-ink: #17141f;
+      --header-bg: rgba(23, 20, 31, 0.86);
+      --shadow: 0 12px 32px rgba(8, 5, 16, 0.42);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Noto Sans JP", system-ui, -apple-system, sans-serif;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      transition: background-color 0.35s var(--ease), color 0.35s var(--ease);
+    }
+
+    /* Top Bar */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 16px;
+      background: var(--header-bg);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: var(--ink);
+      font-size: 0.84rem;
+      font-weight: 500;
+      padding: 7px 13px;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      transition: transform 0.25s var(--ease), border-color 0.25s var(--ease);
+    }
+
+    .back-link:active { transform: scale(0.96); }
+
+    .brand-title {
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .brand-title strong {
+      display: block;
+      font-family: "Shippori Mincho", serif;
+      font-size: 0.98rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-title span {
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.25s var(--ease), background-color 0.25s var(--ease);
+    }
+
+    .icon-btn:active { transform: scale(0.92); }
+    .icon-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* App Container */
+    .app-shell {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 14px 16px 28px;
+    }
+
+    .screen {
+      display: none;
+      animation: fadeUp 0.35s var(--ease);
+    }
+
+    .screen.active { display: block; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Pose Slots Bar */
+    .slots-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .slot-pill {
+      position: relative;
+      height: 58px;
+      border-radius: 16px;
+      border: 1.5px dashed var(--line);
+      background: var(--surface);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 2px;
+      cursor: pointer;
+      transition: border-color 0.25s var(--ease), transform 0.25s var(--ease);
+    }
+
+    .slot-pill.filled {
+      border-style: solid;
+      border-color: var(--accent);
+    }
+
+    .slot-pill.target {
+      border-style: solid;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .slot-pill img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .slot-badge {
+      position: relative;
+      z-index: 2;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--surface-soft);
+      color: var(--accent);
+    }
+
+    .slot-pill.filled .slot-badge {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      background: rgba(37, 31, 47, 0.72);
+      color: #fff;
+      font-size: 0.64rem;
+      padding: 1px 6px;
+    }
+
+    .slot-sub {
+      font-size: 0.64rem;
+      color: var(--muted);
+    }
+
+    /* Viewfinder Card */
+    .camera-card {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      border-radius: 26px;
+      overflow: hidden;
+      background: #1b1624;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+    }
+
+    #cameraVideo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transform: scaleX(-1);
+      transition: filter 0.25s var(--ease);
+    }
+
+    #cameraVideo.unmirrored { transform: scaleX(1); }
+
+    .cam-overlay-top {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .cam-status {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #fff;
+      background: rgba(23, 20, 31, 0.58);
+      padding: 5px 11px;
+      border-radius: 999px;
+      letter-spacing: 0.03em;
+    }
+
+    .cam-tools {
+      display: flex;
+      gap: 8px;
+      pointer-events: auto;
+    }
+
+    .cam-mini-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      background: rgba(23, 20, 31, 0.58);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .cam-mini-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    .cam-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+      gap: 10px;
+      color: #f4eef7;
+      background: radial-gradient(circle at 30% 20%, #37263d, #191522 72%);
+      z-index: 4;
+    }
+
+    .cam-placeholder.hidden { display: none; }
+    .cam-placeholder p { font-size: 0.84rem; color: #d5c7e0; max-width: 260px; line-height: 1.5; }
+
+    .countdown-layer {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(23, 20, 31, 0.28);
+      z-index: 8;
+    }
+
+    .countdown-layer.show { display: flex; }
+
+    .countdown-num {
+      font-family: "Shippori Mincho", serif;
+      font-size: 4.5rem;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+      animation: popNum 0.85s var(--ease);
+    }
+
+    @keyframes popNum {
+      0% { transform: scale(0.5); opacity: 0; }
+      40% { transform: scale(1.12); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.92; }
+    }
+
+    .flash-layer {
+      position: absolute;
+      inset: 0;
+      background: #fff;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 9;
+      transition: opacity 0.22s ease-out;
+    }
+
+    .flash-layer.flash { opacity: 0.92; transition: none; }
+
+    /* Horizontal Rails */
+    .rail-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin: 0 2px 8px;
+    }
+
+    .chip-rail {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 2px 2px 10px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .chip-rail::-webkit-scrollbar { display: none; }
+
+    .filter-chip {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.22s var(--ease);
+    }
+
+    .filter-chip .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.12);
+    }
+
+    .filter-chip.active {
+      background: var(--accent);
+      color: var(--accent-ink);
+      border-color: var(--accent);
+    }
+
+    /* Action Buttons */
+    .btn-primary {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 999px;
+      border: none;
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 10px 22px rgba(196, 87, 136, 0.26);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.22s var(--ease), opacity 0.22s var(--ease);
+    }
+
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .secondary-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .btn-soft {
+      padding: 11px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.22s var(--ease), border-color 0.22s var(--ease);
+    }
+
+    .btn-soft:active { transform: scale(0.97); }
+
+    .btn-next-strip {
+      margin-top: 10px;
+      width: 100%;
+      background: var(--surface-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+      display: none;
+    }
+
+    .btn-next-strip.show { display: inline-flex; }
+
+    /* Screen 2: Strip Preview & 9 Themes */
+    .preview-stage {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .strip-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 245px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 14px 34px rgba(37, 31, 47, 0.16);
+    }
+
+    #stripPreviewImg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .strip-meta-note {
+      margin-top: 10px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .theme-card {
+      flex: 0 0 auto;
+      width: 108px;
+      padding: 10px 8px;
+      border-radius: 18px;
+      border: 1.5px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+      text-align: center;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.22s var(--ease), border-color 0.22s var(--ease), box-shadow 0.22s var(--ease);
+    }
+
+    .theme-card.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+      transform: translateY(-2px);
+    }
+
+    .theme-swatch {
+      width: 100%;
+      height: 36px;
+      border-radius: 11px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Shippori Mincho", serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .theme-name {
+      font-size: 0.74rem;
+      font-weight: 600;
+      line-height: 1.25;
+    }
+
+    .retake-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 4px 0 14px;
+      flex-wrap: wrap;
+    }
+
+    .retake-chip {
+      font-size: 0.74rem;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .retake-chip:hover { border-color: var(--accent); color: var(--accent); }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--ink);
+      color: var(--bg);
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 10px 18px;
+      border-radius: 999px;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 90;
+      transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
+      white-space: nowrap;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    #galleryInput, #singleSlotInput { display: none; }
+    #workCanvas { display: none; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="back-link" href="index.html">← Beranda</a>
+    <div class="brand-title">
+      <strong>Photobox</strong>
+      <span>お守りの世界</span>
+    </div>
+    <button type="button" class="icon-btn" id="themeToggle" aria-label="Ganti mode terang atau gelap" title="Ganti mode">
+      <svg id="themeIcon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </header>
+
+  <main class="app-shell">
+    <!-- LAYAR 1: JEPRET KAMERA -->
+    <section id="screenCapture" class="screen active" aria-label="Layar Kamera">
+      <div class="slots-bar" id="slotsBar">
+        <button type="button" class="slot-pill target" data-slot="0" aria-label="Pose 01">
+          <span class="slot-badge">01</span>
+          <span class="slot-sub">Pose 1</span>
+        </button>
+        <button type="button" class="slot-pill" data-slot="1" aria-label="Pose 02">
+          <span class="slot-badge">02</span>
+          <span class="slot-sub">Pose 2</span>
+        </button>
+        <button type="button" class="slot-pill" data-slot="2" aria-label="Pose 03">
+          <span class="slot-badge">03</span>
+          <span class="slot-sub">Pose 3</span>
+        </button>
+      </div>
+
+      <div class="camera-card">
+        <video id="cameraVideo" playsinline autoplay muted></video>
+        <div class="cam-overlay-top">
+          <span class="cam-status" id="camStatus">Siap · 3 Pose</span>
+          <div class="cam-tools">
+            <button type="button" class="cam-mini-btn" id="btnMirror" title="Balik cermin" aria-label="Balik cermin">
+              <svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M8 7l-5 5 5 5V7z"/><path d="M16 7l5 5-5 5V7z"/></svg>
+            </button>
+            <button type="button" class="cam-mini-btn" id="btnFlipCam" title="Ganti kamera depan atau belakang" aria-label="Ganti kamera">
+              <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="cam-placeholder" id="camPlaceholder">
+          <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#ea8eb9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+          <p id="camPlaceholderMsg">Aktifkan kamera untuk langsung jepret 3 pose, atau pakai foto dari galeri HP.</p>
+          <button type="button" class="btn-soft" id="btnEnableCam" style="background:#ea8eb9;color:#17141f;border:none;font-weight:600;">Aktifkan Kamera</button>
+        </div>
+        <div class="countdown-layer" id="countdownLayer">
+          <span class="countdown-num" id="countdownNum">3</span>
+        </div>
+        <div class="flash-layer" id="flashLayer"></div>
+      </div>
+
+      <div class="rail-label">
+        <span>Filter Warna</span>
+        <span id="activeFilterName">Asli</span>
+      </div>
+      <div class="chip-rail" id="filterRail1"></div>
+
+      <button type="button" class="btn-primary" id="btnStartShoot">Mulai Jepret 3 Pose</button>
+      <button type="button" class="btn-soft btn-next-strip" id="btnGoPreview">Lihat Hasil Photostrip →</button>
+
+      <div class="secondary-row">
+        <button type="button" class="btn-soft" id="btnGallery">Ambil dari Galeri</button>
+        <button type="button" class="btn-soft" id="btnDemoPhotos">Coba Foto Demo</button>
+      </div>
+    </section>
+
+    <!-- LAYAR 2: PILIH GAYA STRIP & UNDUH -->
+    <section id="screenResult" class="screen" aria-label="Layar Hasil Photostrip">
+      <div class="preview-stage">
+        <div class="strip-wrap">
+          <img id="stripPreviewImg" alt="Pratinjau Photostrip Omamori no Sekai" />
+        </div>
+        <div class="strip-meta-note">HD 1200 × 3200 px · Otomatis lengkap dengan QR web pameran</div>
+      </div>
+
+      <div class="retake-row">
+        <button type="button" class="retake-chip" data-replace="0">Ganti Pose 01</button>
+        <button type="button" class="retake-chip" data-replace="1">Ganti Pose 02</button>
+        <button type="button" class="retake-chip" data-replace="2">Ganti Pose 03</button>
+      </div>
+
+      <div class="rail-label">
+        <span>Pilih Gaya Strip (9 Tema)</span>
+        <span id="activeThemeName">Sakura Purikura</span>
+      </div>
+      <div class="chip-rail" id="themeRail"></div>
+
+      <div class="rail-label" style="margin-top:6px;">
+        <span>Filter Warna</span>
+        <span id="activeFilterName2">Asli</span>
+      </div>
+      <div class="chip-rail" id="filterRail2"></div>
+
+      <button type="button" class="btn-primary" id="btnDownload" style="margin-top:8px;">Unduh Photostrip HD (PNG)</button>
+      <div class="secondary-row">
+        <button type="button" class="btn-soft" id="btnRetakeAll">← Foto Ulang</button>
+        <button type="button" class="btn-soft" id="btnGalleryResult">Ganti dari Galeri</button>
+      </div>
+    </section>
+  </main>
+
+  <input type="file" id="galleryInput" accept="image/*" multiple />
+  <input type="file" id="singleSlotInput" accept="image/*" />
+  <canvas id="workCanvas" width="1200" height="3200"></canvas>
+  <div class="toast" id="toast"></div>
+
+  <script>
+    (function () {
+      // Verified 33x33 QR Code Matrix (V4-M) -> https://tha-thachan.github.io/Omamori-No-Sekai/
+      const QR_MATRIX = ["111111100010001110110011001111111", "100000101011010111011101001000001", "101110100110000100010000001011101", "101110100011010001010011001011101", "101110101111010001000111001011101", "100000100101101001000101101000001", "111111101010101010101010101111111", "000000000001111011101100000000000", "101010100101000111011101000010010", "011111001111000010101000111100011", "111101101111010001001010010100111", "110101000101100100001111111010000", "000010110100000100010111111011001", "001111001111100101010100111000101", "110000110100010000000010010111111", "011001010110010101010111101010010", "011001110000000011001100111000000", "101100010100010011000000001100011", "101110100011000010101100010000111", "110000010110101011101111001110000", "001111110011001110111010101001010", "010111010111110110111100111100111", "100110101100010110111110011111011", "010000000010000011001110010110001", "101101110000111111011100111111010", "000000001111001000101001100011011", "111111100100011011000101101010111", "100000100110111000010000100010001", "101110101101100000000000111111010", "101110100011000101010001000011011", "101110101011110000000010000010001", "100000100010011101110100001010010", "111111101010000011001101111010011"];
+
+      const FILTERS = [
+        { id: "none", label: "Asli", dot: "#d8d4de", css: "none" },
+        { id: "sakura", label: "Sakura Airy", dot: "#f7c4db", css: "brightness(1.07) contrast(0.95) saturate(1.12) hue-rotate(-6deg)" },
+        { id: "mint", label: "Fuji Mint", dot: "#b8e4d8", css: "brightness(1.05) contrast(0.97) saturate(0.92) hue-rotate(8deg)" },
+        { id: "analog", label: "Analog", dot: "#e7c9a7", css: "brightness(1.03) contrast(1.06) sepia(0.22) saturate(1.08)" },
+        { id: "bw", label: "Zine B&W", dot: "#494552", css: "grayscale(1) contrast(1.12) brightness(1.04)" }
+      ];
+
+      const THEMES = [
+        { id: "sakura", name: "Sakura Purikura", jp: "桜", swBg: "#fcebf3", swFg: "#c45788" },
+        { id: "matcha", name: "Matcha Dango", jp: "茶", swBg: "#eaf6ef", swFg: "#3c7559" },
+        { id: "kyoto35", name: "Kyoto 35mm", jp: "写", swBg: "#1e1b29", swFg: "#f2c6a0" },
+        { id: "washi", name: "Mading Washi", jp: "紙", swBg: "#f6f2fb", swFg: "#7b65b8" },
+        { id: "neko", name: "Neko Lucky", jp: "福", swBg: "#fdf2ee", swFg: "#cc5c62" },
+        { id: "furin", name: "Furin Summer", jp: "涼", swBg: "#ebf5fd", swFg: "#3b76ad" },
+        { id: "fuji", name: "Fuji Lavender", jp: "富", swBg: "#f2edfd", swFg: "#6b54b5" },
+        { id: "ichigo", name: "Ichigo Milk", jp: "苺", swBg: "#fdeef2", swFg: "#d14d72" },
+        { id: "galeri", name: "Katalog Galeri", jp: "展", swBg: "#f5f4f7", swFg: "#2a2534" }
+      ];
+
+      // State
+      const photos = [null, null, null];
+      let activeFilter = "none";
+      let activeTheme = "sakura";
+      let facingMode = "user";
+      let mirrored = true;
+      let stream = null;
+      let isShooting = false;
+      let replaceTarget = null;
+
+      // DOM
+      const screenCapture = document.getElementById("screenCapture");
+      const screenResult = document.getElementById("screenResult");
+      const video = document.getElementById("cameraVideo");
+      const camPlaceholder = document.getElementById("camPlaceholder");
+      const camPlaceholderMsg = document.getElementById("camPlaceholderMsg");
+      const camStatus = document.getElementById("camStatus");
+      const countdownLayer = document.getElementById("countdownLayer");
+      const countdownNum = document.getElementById("countdownNum");
+      const flashLayer = document.getElementById("flashLayer");
+      const slotBtns = Array.from(document.querySelectorAll(".slot-pill"));
+      const btnStartShoot = document.getElementById("btnStartShoot");
+      const btnGoPreview = document.getElementById("btnGoPreview");
+      const btnEnableCam = document.getElementById("btnEnableCam");
+      const btnMirror = document.getElementById("btnMirror");
+      const btnFlipCam = document.getElementById("btnFlipCam");
+      const btnGallery = document.getElementById("btnGallery");
+      const btnGalleryResult = document.getElementById("btnGalleryResult");
+      const btnDemoPhotos = document.getElementById("btnDemoPhotos");
+      const btnDownload = document.getElementById("btnDownload");
+      const btnRetakeAll = document.getElementById("btnRetakeAll");
+      const galleryInput = document.getElementById("galleryInput");
+      const singleSlotInput = document.getElementById("singleSlotInput");
+      const workCanvas = document.getElementById("workCanvas");
+      const stripPreviewImg = document.getElementById("stripPreviewImg");
+      const filterRail1 = document.getElementById("filterRail1");
+      const filterRail2 = document.getElementById("filterRail2");
+      const themeRail = document.getElementById("themeRail");
+      const activeFilterName = document.getElementById("activeFilterName");
+      const activeFilterName2 = document.getElementById("activeFilterName2");
+      const activeThemeName = document.getElementById("activeThemeName");
+      const toastEl = document.getElementById("toast");
+      const themeToggle = document.getElementById("themeToggle");
+      const themeIcon = document.getElementById("themeIcon");
+
+      let toastTimer = null;
+      function showToast(msg) {
+        toastEl.textContent = msg;
+        toastEl.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2300);
+      }
+
+      // Theme sync with main site
+      const sunSvg = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+      const moonSvg = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+      function applyUiTheme(t) {
+        document.documentElement.setAttribute("data-theme", t);
+        themeIcon.innerHTML = t === "dark" ? sunSvg : moonSvg;
+        try { localStorage.setItem("omamori-theme", t); } catch (e) {}
+      }
+      try {
+        const saved = localStorage.getItem("omamori-theme");
+        if (saved === "dark" || saved === "light") applyUiTheme(saved);
+      } catch (e) {}
+      themeToggle.addEventListener("click", () => {
+        const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        applyUiTheme(next);
+      });
+
+      // Build filter chips in both screens
+      function buildFilterRails() {
+        [filterRail1, filterRail2].forEach((rail) => {
+          rail.innerHTML = "";
+          FILTERS.forEach((f) => {
+            const b = document.createElement("button");
+            b.type = "button";
+            b.className = "filter-chip" + (f.id === activeFilter ? " active" : "");
+            b.dataset.filter = f.id;
+            b.innerHTML = '<span class="dot" style="background:' + f.dot + '"></span>' + f.label;
+            b.addEventListener("click", () => setFilter(f.id));
+            rail.appendChild(b);
+          });
+        });
+      }
+
+      function setFilter(id) {
+        activeFilter = id;
+        const fObj = FILTERS.find((x) => x.id === id) || FILTERS[0];
+        video.style.filter = fObj.css;
+        activeFilterName.textContent = fObj.label;
+        activeFilterName2.textContent = fObj.label;
+        document.querySelectorAll(".filter-chip").forEach((el) => {
+          el.classList.toggle("active", el.dataset.filter === id);
+        });
+        if (screenResult.classList.contains("active")) renderStrip();
+      }
+
+      // Build 9 theme cards
+      function buildThemeRail() {
+        themeRail.innerHTML = "";
+        THEMES.forEach((t) => {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.className = "theme-card" + (t.id === activeTheme ? " active" : "");
+          b.dataset.themeId = t.id;
+          b.innerHTML =
+            '<div class="theme-swatch" style="background:' + t.swBg + ';color:' + t.swFg + '">' + t.jp + '</div>' +
+            '<span class="theme-name">' + t.name + '</span>';
+          b.addEventListener("click", () => {
+            activeTheme = t.id;
+            activeThemeName.textContent = t.name;
+            themeRail.querySelectorAll(".theme-card").forEach((c) => {
+              c.classList.toggle("active", c.dataset.themeId === t.id);
+            });
+            renderStrip();
+          });
+          themeRail.appendChild(b);
+        });
+      }
+
+      // Camera helpers
+      async function startCamera() {
+        stopCamera();
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          camPlaceholder.classList.remove("hidden");
+          camPlaceholderMsg.textContent = "Browser ini membatasi kamera. Pakai tombol Ambil dari Galeri di bawah ya.";
+          return false;
+        }
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: facingMode, width: { ideal: 1280 }, height: { ideal: 960 } },
+            audio: false
+          });
+          video.srcObject = stream;
+          await video.play();
+          camPlaceholder.classList.add("hidden");
+          video.classList.toggle("unmirrored", !mirrored);
+          return true;
+        } catch (err) {
+          camPlaceholder.classList.remove("hidden");
+          camPlaceholderMsg.textContent = "Izin kamera belum aktif. Klik Aktifkan Kamera atau Ambil dari Galeri.";
+          return false;
+        }
+      }
+
+      function stopCamera() {
+        if (stream) {
+          stream.getTracks().forEach((tr) => tr.stop());
+          stream = null;
+        }
+      }
+
+      btnEnableCam.addEventListener("click", () => startCamera());
+
+      btnMirror.addEventListener("click", () => {
+        mirrored = !mirrored;
+        video.classList.toggle("unmirrored", !mirrored);
+        showToast(mirrored ? "Mode cermin aktif" : "Mode cermin mati");
+      });
+
+      btnFlipCam.addEventListener("click", async () => {
+        facingMode = facingMode === "user" ? "environment" : "user";
+        mirrored = facingMode === "user";
+        await startCamera();
+        showToast(facingMode === "user" ? "Kamera depan" : "Kamera belakang");
+      });
+
+      // Update slot pills UI
+      function updateSlotsUI() {
+        const nextEmpty = photos.findIndex((p) => !p);
+        slotBtns.forEach((btn, i) => {
+          const oldImg = btn.querySelector("img");
+          if (oldImg) oldImg.remove();
+          btn.classList.remove("filled", "target");
+          if (photos[i]) {
+            const im = document.createElement("img");
+            im.src = photos[i].src;
+            btn.appendChild(im);
+            btn.classList.add("filled");
+          } else if (i === nextEmpty) {
+            btn.classList.add("target");
+          }
+        });
+        const filledCount = photos.filter(Boolean).length;
+        camStatus.textContent = filledCount === 3 ? "3 / 3 Pose Siap" : "Terisi " + filledCount + " / 3 Pose";
+        btnGoPreview.classList.toggle("show", filledCount === 3);
+      }
+
+      // Click a slot to replace that single slot via file picker
+      slotBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (isShooting) return;
+          replaceTarget = Number(btn.dataset.slot);
+          singleSlotInput.value = "";
+          singleSlotInput.click();
+        });
+      });
+
+      document.querySelectorAll(".retake-chip").forEach((chip) => {
+        chip.addEventListener("click", () => {
+          replaceTarget = Number(chip.dataset.replace);
+          singleSlotInput.value = "";
+          singleSlotInput.click();
+        });
+      });
+
+      function wait(ms) { return new Promise((r) => setTimeout(r, ms)); }
+
+      async function runCountdown(poseNum) {
+        camStatus.textContent = "Pose 0" + poseNum + " · Siap...";
+        countdownLayer.classList.add("show");
+        for (let n = 3; n >= 1; n--) {
+          countdownNum.textContent = String(n);
+          countdownNum.style.animation = "none";
+          void countdownNum.offsetWidth;
+          countdownNum.style.animation = "";
+          await wait(850);
+        }
+        countdownLayer.classList.remove("show");
+      }
+
+      function captureFrameToImage() {
+        const vw = video.videoWidth || 960;
+        const vh = video.videoHeight || 720;
+        const c = document.createElement("canvas");
+        c.width = vw;
+        c.height = vh;
+        const cx = c.getContext("2d");
+        if (mirrored) {
+          cx.translate(vw, 0);
+          cx.scale(-1, 1);
+        }
+        cx.drawImage(video, 0, 0, vw, vh);
+        flashLayer.classList.add("flash");
+        setTimeout(() => flashLayer.classList.remove("flash"), 140);
+        return new Promise((resolve) => {
+          const im = new Image();
+          im.onload = () => resolve(im);
+          im.src = c.toDataURL("image/jpeg", 0.94);
+        });
+      }
+
+      btnStartShoot.addEventListener("click", async () => {
+        if (isShooting) return;
+        if (!stream) {
+          const ok = await startCamera();
+          if (!ok) {
+            showToast("Kamera tidak tersedia, coba Ambil dari Galeri");
+            return;
+          }
+        }
+        isShooting = true;
+        btnStartShoot.disabled = true;
+        try {
+          for (let i = 0; i < 3; i++) {
+            await runCountdown(i + 1);
+            photos[i] = await captureFrameToImage();
+            updateSlotsUI();
+            if (i < 2) await wait(450);
+          }
+          openResultScreen();
+        } finally {
+          isShooting = false;
+          btnStartShoot.disabled = false;
+        }
+      });
+
+      // Gallery multi-upload (1-3 photos)
+      function loadFileAsImage(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const im = new Image();
+            im.onload = () => resolve(im);
+            im.onerror = reject;
+            im.src = reader.result;
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+
+      [btnGallery, btnGalleryResult].forEach((b) => {
+        b.addEventListener("click", () => {
+          galleryInput.value = "";
+          galleryInput.click();
+        });
+      });
+
+      galleryInput.addEventListener("change", async (e) => {
+        const files = Array.from(e.target.files || []).slice(0, 3);
+        if (!files.length) return;
+        const loaded = await Promise.all(files.map(loadFileAsImage));
+        if (loaded.length === 1) {
+          const idx = photos.findIndex((p) => !p);
+          const target = idx === -1 ? 0 : idx;
+          photos[target] = loaded[0];
+          if (photos.filter(Boolean).length < 3) {
+            // Fill remaining slots with same photo only if user wants quick preview? Better: inform user
+            updateSlotsUI();
+            showToast("Pose 0" + (target + 1) + " terisi! Pilih foto lagi atau klik Demo");
+            return;
+          }
+        } else {
+          for (let i = 0; i < 3; i++) {
+            photos[i] = loaded[i] || loaded[loaded.length - 1];
+          }
+        }
+        updateSlotsUI();
+        openResultScreen();
+      });
+
+      singleSlotInput.addEventListener("change", async (e) => {
+        const file = (e.target.files || [])[0];
+        if (!file || replaceTarget === null) return;
+        photos[replaceTarget] = await loadFileAsImage(file);
+        const idx = replaceTarget;
+        replaceTarget = null;
+        updateSlotsUI();
+        showToast("Pose 0" + (idx + 1) + " diperbarui");
+        if (screenResult.classList.contains("active")) {
+          renderStrip();
+        } else if (photos.every(Boolean)) {
+          openResultScreen();
+        }
+      });
+
+      // Built-in aesthetic Japanese demo photos (so user can test all 9 themes immediately)
+      function makeDemoImage(idx) {
+        const c = document.createElement("canvas");
+        c.width = 960;
+        c.height = 720;
+        const ctx = c.getContext("2d");
+        const palettes = [
+          ["#fde7f0", "#f4c8de", "#c45788", "Pose 01 · 縁結び", "Senyum di Stan Pameran"],
+          ["#e7f4fc", "#c5e2f8", "#3b76ad", "Pose 02 · 開運", "Tunjukkan Omamori Favorit"],
+          ["#eff7f1", "#ccead7", "#3c7559", "Pose 03 · 笑顔", "Kenangan Taishu Bunka"]
+        ];
+        const [bg1, bg2, acc, label, sub] = palettes[idx];
+        const g = ctx.createLinearGradient(0, 0, 960, 720);
+        g.addColorStop(0, bg1);
+        g.addColorStop(1, bg2);
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, 960, 720);
+
+        // Soft decorative circles
+        ctx.fillStyle = "rgba(255,255,255,0.45)";
+        ctx.beginPath(); ctx.arc(170, 140, 110, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(820, 580, 140, 0, Math.PI * 2); ctx.fill();
+
+        // Cute omamori silhouette in center
+        ctx.save();
+        ctx.translate(480, 325);
+        ctx.fillStyle = "#ffffff";
+        ctx.strokeStyle = acc;
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.moveTo(-62, -96); ctx.lineTo(62, -96);
+        ctx.lineTo(86, -54); ctx.lineTo(86, 98);
+        ctx.quadraticCurveTo(86, 114, 70, 114);
+        ctx.lineTo(-70, 114);
+        ctx.quadraticCurveTo(-86, 114, -86, 98);
+        ctx.lineTo(-86, -54);
+        ctx.closePath();
+        ctx.fill(); ctx.stroke();
+
+        // Knot
+        ctx.beginPath(); ctx.arc(-18, -68, 12, 0, Math.PI * 2); ctx.stroke();
+        ctx.beginPath(); ctx.arc(18, -68, 12, 0, Math.PI * 2); ctx.stroke();
+        ctx.fillStyle = acc;
+        ctx.beginPath(); ctx.arc(0, -68, 8, 0, Math.PI * 2); ctx.fill();
+
+        // Label inside charm
+        ctx.fillStyle = acc;
+        ctx.font = '700 42px "Shippori Mincho", serif';
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        const kanjis = ["守", "福", "縁"];
+        ctx.fillText(kanjis[idx], 0, 26);
+        ctx.restore();
+
+        ctx.fillStyle = "#251f2f";
+        ctx.font = '700 32px "Shippori Mincho", serif';
+        ctx.textAlign = "center";
+        ctx.fillText(label, 480, 520);
+        ctx.fillStyle = "#5f556b";
+        ctx.font = '500 22px "Noto Sans JP", sans-serif';
+        ctx.fillText(sub, 480, 562);
+
+        return new Promise((resolve) => {
+          const im = new Image();
+          im.onload = () => resolve(im);
+          im.src = c.toDataURL("image/png");
+        });
+      }
+
+      btnDemoPhotos.addEventListener("click", async () => {
+        for (let i = 0; i < 3; i++) photos[i] = await makeDemoImage(i);
+        updateSlotsUI();
+        openResultScreen();
+        showToast("Foto demo siap dicoba di 9 tema!");
+      });
+
+      btnGoPreview.addEventListener("click", () => openResultScreen());
+
+      btnRetakeAll.addEventListener("click", () => {
+        screenResult.classList.remove("active");
+        screenCapture.classList.add("active");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+
+      function openResultScreen() {
+        screenCapture.classList.remove("active");
+        screenResult.classList.add("active");
+        renderStrip();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      // =====================================================================
+      // HD 1200 x 3200 CANVAS RENDERER + 9 PINTEREST-STYLE JAPANESE THEMES
+      // =====================================================================
+      function roundRectPath(ctx, x, y, w, h, r) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + w - r, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+        ctx.lineTo(x + w, y + h - r);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        ctx.lineTo(x + r, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+        ctx.lineTo(x, y + r);
+        ctx.quadraticCurveTo(x, y, x + r, y);
+        ctx.closePath();
+      }
+
+      function archRectPath(ctx, x, y, w, h, rBottom) {
+        const rad = w / 2;
+        ctx.beginPath();
+        ctx.arc(x + rad, y + rad, rad, Math.PI, 0, false);
+        ctx.lineTo(x + w, y + h - rBottom);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - rBottom, y + h);
+        ctx.lineTo(x + rBottom, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - rBottom);
+        ctx.closePath();
+      }
+
+      function drawImageCover(ctx, img, x, y, w, h) {
+        if (!img) return;
+        const iw = img.naturalWidth || img.width;
+        const ih = img.naturalHeight || img.height;
+        const scale = Math.max(w / iw, h / ih);
+        const sw = w / scale;
+        const sh = h / scale;
+        const sx = (iw - sw) / 2;
+        const sy = (ih - sh) / 2;
+        ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
+      }
+
+      function drawPaperGrain(ctx, W, H, alpha, dark) {
+        ctx.save();
+        ctx.fillStyle = dark ? "rgba(255,255,255," + alpha + ")" : "rgba(60,40,65," + alpha + ")";
+        let seed = 1337;
+        for (let i = 0; i < 1400; i++) {
+          seed = (seed * 16807) % 2147483647;
+          const x = (seed % W);
+          seed = (seed * 16807) % 2147483647;
+          const y = (seed % H);
+          ctx.fillRect(x, y, 2, 2);
+        }
+        ctx.restore();
+      }
+
+      // Vector Stickers (handcrafted 2D canvas, zero emoji)
+      function drawSakuraFlower(ctx, x, y, r, color, rot) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rot || 0);
+        ctx.fillStyle = color;
+        for (let i = 0; i < 5; i++) {
+          ctx.save();
+          ctx.rotate((Math.PI * 2 * i) / 5);
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.bezierCurveTo(-r * 0.45, -r * 0.45, -r * 0.38, -r * 1.05, -r * 0.08, -r * 0.92);
+          ctx.lineTo(0, -r * 0.78);
+          ctx.lineTo(r * 0.08, -r * 0.92);
+          ctx.bezierCurveTo(r * 0.38, -r * 1.05, r * 0.45, -r * 0.45, 0, 0);
+          ctx.fill();
+          ctx.restore();
+        }
+        ctx.fillStyle = "#fff6d6";
+        ctx.beginPath(); ctx.arc(0, 0, r * 0.17, 0, Math.PI * 2); ctx.fill();
+        ctx.restore();
+      }
+
+      function drawOmamoriSticker(ctx, x, y, scale, bodyCol, cordCol, kanji) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.scale(scale, scale);
+        ctx.strokeStyle = cordCol;
+        ctx.lineWidth = 5;
+        ctx.beginPath(); ctx.moveTo(0, -56); ctx.lineTo(0, -82); ctx.stroke();
+        ctx.fillStyle = bodyCol;
+        ctx.beginPath();
+        ctx.moveTo(-34, -54); ctx.lineTo(34, -54);
+        ctx.lineTo(46, -28); ctx.lineTo(46, 54);
+        ctx.quadraticCurveTo(46, 64, 36, 64);
+        ctx.lineTo(-36, 64);
+        ctx.quadraticCurveTo(-46, 64, -46, 54);
+        ctx.lineTo(-46, -28);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255,255,255,0.85)";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        ctx.fillStyle = "#ffffff";
+        roundRectPath(ctx, -20, -16, 40, 62, 6);
+        ctx.fill();
+        ctx.strokeStyle = cordCol;
+        ctx.lineWidth = 4;
+        ctx.beginPath(); ctx.arc(-11, -35, 7, 0, Math.PI * 2); ctx.stroke();
+        ctx.beginPath(); ctx.arc(11, -35, 7, 0, Math.PI * 2); ctx.stroke();
+        ctx.fillStyle = cordCol;
+        ctx.beginPath(); ctx.arc(0, -35, 5, 0, Math.PI * 2); ctx.fill();
+        ctx.font = '700 24px "Shippori Mincho", serif';
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(kanji || "守", 0, 16);
+        ctx.restore();
+      }
+
+      function drawDangoSticker(ctx, x, y, scale, rot) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rot || -0.35);
+        ctx.scale(scale, scale);
+        ctx.strokeStyle = "#b38b67";
+        ctx.lineWidth = 7;
+        ctx.lineCap = "round";
+        ctx.beginPath(); ctx.moveTo(0, -70); ctx.lineTo(0, 74); ctx.stroke();
+        const cols = ["#f7c2d6", "#fffaf2", "#a5d4ad"];
+        [-42, -6, 30].forEach((dy, i) => {
+          ctx.fillStyle = cols[i];
+          ctx.beginPath(); ctx.arc(0, dy, 21, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = "rgba(255,255,255,0.45)";
+          ctx.beginPath(); ctx.arc(-6, dy - 6, 5, 0, Math.PI * 2); ctx.fill();
+        });
+        ctx.restore();
+      }
+
+      function drawMatchaCup(ctx, x, y, scale) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.scale(scale, scale);
+        ctx.fillStyle = "#ffffff";
+        ctx.strokeStyle = "#4d7c63";
+        ctx.lineWidth = 4;
+        roundRectPath(ctx, -38, -28, 76, 62, 16);
+        ctx.fill(); ctx.stroke();
+        ctx.fillStyle = "#8bc29e";
+        ctx.beginPath(); ctx.ellipse(0, -24, 32, 9, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = "#8bc29e";
+        ctx.lineWidth = 3;
+        [-14, 0, 14].forEach((sx) => {
+          ctx.beginPath();
+          ctx.moveTo(sx, -40);
+          ctx.quadraticCurveTo(sx + 6, -50, sx - 2, -60);
+          ctx.stroke();
+        });
+        ctx.restore();
+      }
+
+      function drawNekoSticker(ctx, x, y, scale) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.scale(scale, scale);
+        ctx.fillStyle = "#ffffff";
+        ctx.strokeStyle = "#cc5c62";
+        ctx.lineWidth = 4;
+        // Ears
+        ctx.beginPath(); ctx.moveTo(-34, -18); ctx.lineTo(-42, -52); ctx.lineTo(-12, -36); ctx.closePath(); ctx.fill(); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(34, -18); ctx.lineTo(42, -52); ctx.lineTo(12, -36); ctx.closePath(); ctx.fill(); ctx.stroke();
+        // Face
+        ctx.beginPath(); ctx.ellipse(0, 0, 44, 38, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        // Inner ears
+        ctx.fillStyle = "#f9c5cf";
+        ctx.beginPath(); ctx.moveTo(-30, -22); ctx.lineTo(-34, -42); ctx.lineTo(-16, -32); ctx.closePath(); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(30, -22); ctx.lineTo(34, -42); ctx.lineTo(16, -32); ctx.closePath(); ctx.fill();
+        // Eyes
+        ctx.strokeStyle = "#2b2230";
+        ctx.lineWidth = 3.5;
+        ctx.beginPath(); ctx.arc(-15, -4, 7, Math.PI, 0); ctx.stroke();
+        ctx.beginPath(); ctx.arc(15, -4, 7, Math.PI, 0); ctx.stroke();
+        // Blush
+        ctx.fillStyle = "rgba(242,148,172,0.5)";
+        ctx.beginPath(); ctx.ellipse(-26, 8, 7, 4, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(26, 8, 7, 4, 0, 0, Math.PI * 2); ctx.fill();
+        // Collar & bell
+        ctx.strokeStyle = "#cc5c62";
+        ctx.lineWidth = 6;
+        ctx.beginPath(); ctx.moveTo(-26, 34); ctx.lineTo(26, 34); ctx.stroke();
+        ctx.fillStyle = "#f5cb69";
+        ctx.beginPath(); ctx.arc(0, 40, 10, 0, Math.PI * 2); ctx.fill();
+        ctx.restore();
+      }
+
+      function drawFurinSticker(ctx, x, y, scale) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.scale(scale, scale);
+        ctx.fillStyle = "rgba(182, 224, 252, 0.72)";
+        ctx.strokeStyle = "#3b76ad";
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.arc(0, -10, 36, Math.PI, 0);
+        ctx.lineTo(36, 12);
+        ctx.quadraticCurveTo(0, 22, -36, 12);
+        ctx.closePath();
+        ctx.fill(); ctx.stroke();
+        ctx.strokeStyle = "#3b76ad";
+        ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(0, 16); ctx.lineTo(0, 44); ctx.stroke();
+        ctx.fillStyle = "#fcebf3";
+        ctx.strokeStyle = "#c45788";
+        ctx.lineWidth = 3;
+        roundRectPath(ctx, -14, 42, 28, 62, 5);
+        ctx.fill(); ctx.stroke();
+        ctx.fillStyle = "#c45788";
+        ctx.font = '700 18px "Shippori Mincho", serif';
+        ctx.textAlign = "center";
+        ctx.fillText("涼", 0, 78);
+        ctx.restore();
+      }
+
+      function drawFujiSticker(ctx, x, y, scale) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.scale(scale, scale);
+        ctx.fillStyle = "#8a78cf";
+        ctx.beginPath();
+        ctx.moveTo(-70, 36);
+        ctx.quadraticCurveTo(-28, 6, -18, -32);
+        ctx.lineTo(18, -32);
+        ctx.quadraticCurveTo(28, 6, 70, 36);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath();
+        ctx.moveTo(-18, -32);
+        ctx.lineTo(18, -32);
+        ctx.lineTo(28, -4);
+        ctx.lineTo(14, -12);
+        ctx.lineTo(0, -2);
+        ctx.lineTo(-14, -12);
+        ctx.lineTo(-28, -4);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function drawStrawberry(ctx, x, y, scale, rot) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rot || 0);
+        ctx.scale(scale, scale);
+        ctx.fillStyle = "#e65c7b";
+        ctx.beginPath();
+        ctx.moveTo(0, 34);
+        ctx.bezierCurveTo(-34, 16, -34, -26, 0, -22);
+        ctx.bezierCurveTo(34, -26, 34, 16, 0, 34);
+        ctx.fill();
+        ctx.fillStyle = "#77b887";
+        ctx.beginPath();
+        ctx.moveTo(-18, -22); ctx.lineTo(0, -10); ctx.lineTo(18, -22);
+        ctx.lineTo(8, -30); ctx.lineTo(0, -24); ctx.lineTo(-8, -30);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = "#fff5d9";
+        [[-10,-4],[10,-4],[0,6],[-8,14],[8,14]].forEach(([sx, sy]) => {
+          ctx.beginPath(); ctx.arc(sx, sy, 2.3, 0, Math.PI * 2); ctx.fill();
+        });
+        ctx.restore();
+      }
+
+      function drawWashiTape(ctx, x, y, w, h, color, pattern, rot) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rot || 0);
+        ctx.globalAlpha = 0.86;
+        ctx.fillStyle = color;
+        ctx.fillRect(-w / 2, -h / 2, w, h);
+        ctx.strokeStyle = "rgba(255,255,255,0.65)";
+        ctx.fillStyle = "rgba(255,255,255,0.65)";
+        if (pattern === "stripe") {
+          ctx.lineWidth = 8;
+          for (let sx = -w; sx < w; sx += 26) {
+            ctx.beginPath(); ctx.moveTo(sx, -h / 2); ctx.lineTo(sx + h, h / 2); ctx.stroke();
+          }
+        } else if (pattern === "dots") {
+          for (let dx = -w / 2 + 18; dx < w / 2 - 10; dx += 26) {
+            for (let dy = -h / 2 + 16; dy < h / 2 - 8; dy += 24) {
+              ctx.beginPath(); ctx.arc(dx, dy, 4.5, 0, Math.PI * 2); ctx.fill();
+            }
+          }
+        } else {
+          ctx.lineWidth = 3;
+          for (let gx = -w / 2 + 18; gx < w / 2; gx += 22) {
+            ctx.beginPath(); ctx.moveTo(gx, -h / 2); ctx.lineTo(gx, h / 2); ctx.stroke();
+          }
+          ctx.beginPath(); ctx.moveTo(-w / 2, 0); ctx.lineTo(w / 2, 0); ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      function drawHanko(ctx, x, y, size, color, text) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(-0.07);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 5;
+        roundRectPath(ctx, -size / 2, -size / 2, size, size, 12);
+        ctx.stroke();
+        ctx.fillStyle = color;
+        ctx.font = '700 ' + Math.round(size * 0.48) + 'px "Shippori Mincho", serif';
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(text, 0, 2);
+        ctx.restore();
+      }
+
+      function drawQrCode(ctx, x, y, boxSize, fgColor, bgColor) {
+        const N = QR_MATRIX.length;
+        const quiet = 3;
+        const totalMods = N + quiet * 2;
+        const mod = boxSize / totalMods;
+        ctx.save();
+        ctx.fillStyle = bgColor || "#ffffff";
+        roundRectPath(ctx, x, y, boxSize, boxSize, 16);
+        ctx.fill();
+        ctx.fillStyle = fgColor || "#1f1b28";
+        for (let r = 0; r < N; r++) {
+          const row = QR_MATRIX[r];
+          for (let c = 0; c < N; c++) {
+            if (row[c] === "1") {
+              ctx.fillRect(
+                x + (c + quiet) * mod,
+                y + (r + quiet) * mod,
+                Math.ceil(mod),
+                Math.ceil(mod)
+              );
+            }
+          }
+        }
+        ctx.restore();
+      }
+
+      function renderStrip() {
+        const ctx = workCanvas.getContext("2d");
+        const W = 1200;
+        const H = 3200;
+        const fObj = FILTERS.find((x) => x.id === activeFilter) || FILTERS[0];
+
+        ctx.clearRect(0, 0, W, H);
+
+        // Theme configuration
+        const cfgMap = {
+          sakura:  { bg: "#fceef5", ink: "#312233", muted: "#8c637d", acc: "#c45788", hanko: "御守", sub: "SAKURA PURIKURA · PAMERAN TAISHU BUNKA", qrFg: "#312233", qrBg: "#ffffff" },
+          matcha:  { bg: "#eef7f0", ink: "#1e3a2d", muted: "#587a68", acc: "#3f7d5f", hanko: "和敬", sub: "MATCHA DANGO · PAMERAN TAISHU BUNKA", qrFg: "#1e3a2d", qrBg: "#ffffff" },
+          kyoto35: { bg: "#1b1824", ink: "#f6eef8", muted: "#b4a6c4", acc: "#e8b996", hanko: "記憶", sub: "KYOTO 35MM FILM · PAMERAN TAISHU BUNKA", qrFg: "#1b1824", qrBg: "#faf6f0", dark: true },
+          washi:   { bg: "#f7f3fc", ink: "#2a2338", muted: "#756a8a", acc: "#7f68c2", hanko: "記録", sub: "MADING WASHI · PAMERAN TAISHU BUNKA", qrFg: "#2a2338", qrBg: "#ffffff" },
+          neko:    { bg: "#fdf3ef", ink: "#362326", muted: "#8f696d", acc: "#cc5c62", hanko: "招福", sub: "NEKO LUCKY CHARM · PAMERAN TAISHU BUNKA", qrFg: "#362326", qrBg: "#ffffff" },
+          furin:   { bg: "#edf6fd", ink: "#1d3147", muted: "#5b7999", acc: "#3b76ad", hanko: "清涼", sub: "FURIN SUMMER · PAMERAN TAISHU BUNKA", qrFg: "#1d3147", qrBg: "#ffffff" },
+          fuji:    { bg: "#f2edfe", ink: "#282140", muted: "#6c6191", acc: "#6b54b5", hanko: "開運", sub: "FUJI LAVENDER · PAMERAN TAISHU BUNKA", qrFg: "#282140", qrBg: "#ffffff" },
+          ichigo:  { bg: "#fdefef", ink: "#3d212b", muted: "#966172", acc: "#d14d72", hanko: "甘味", sub: "ICHIGO MILK · PAMERAN TAISHU BUNKA", qrFg: "#3d212b", qrBg: "#ffffff" },
+          galeri:  { bg: "#f7f6f9", ink: "#231e2c", muted: "#71697e", acc: "#9e5276", hanko: "展示", sub: "KATALOG GALERI · PAMERAN TAISHU BUNKA", qrFg: "#231e2c", qrBg: "#ffffff" }
+        };
+        const cfg = cfgMap[activeTheme] || cfgMap.sakura;
+
+        // 1. Background fill + theme-specific subtle texture
+        ctx.fillStyle = cfg.bg;
+        ctx.fillRect(0, 0, W, H);
+        drawPaperGrain(ctx, W, H, cfg.dark ? 0.045 : 0.032, !!cfg.dark);
+
+        if (activeTheme === "sakura") {
+          // Subtle Seigaiha waves at top & bottom
+          ctx.save();
+          ctx.strokeStyle = "rgba(196, 87, 136, 0.11)";
+          ctx.lineWidth = 3;
+          for (let row = 0; row < 4; row++) {
+            for (let col = -1; col < 10; col++) {
+              const cx = col * 140 + (row % 2) * 70;
+              const cy = row * 56;
+              [24, 44, 64].forEach((r) => {
+                ctx.beginPath(); ctx.arc(cx, cy, r, Math.PI, 0); ctx.stroke();
+              });
+            }
+          }
+          ctx.restore();
+        } else if (activeTheme === "matcha") {
+          // Soft woven linen plaid
+          ctx.save();
+          ctx.fillStyle = "rgba(63, 125, 95, 0.045)";
+          for (let x = 0; x < W; x += 80) ctx.fillRect(x, 0, 28, H);
+          for (let y = 0; y < H; y += 80) ctx.fillRect(0, y, W, 28);
+          ctx.restore();
+        } else if (activeTheme === "washi") {
+          // Soft dot-grid
+          ctx.save();
+          ctx.fillStyle = "rgba(127, 104, 194, 0.16)";
+          for (let x = 50; x < W; x += 48) {
+            for (let y = 50; y < H; y += 48) {
+              ctx.beginPath(); ctx.arc(x, y, 2.5, 0, Math.PI * 2); ctx.fill();
+            }
+          }
+          ctx.restore();
+        } else if (activeTheme === "ichigo") {
+          // Pastel gingham dots
+          ctx.save();
+          ctx.fillStyle = "rgba(209, 77, 114, 0.06)";
+          for (let x = 0; x < W; x += 72) ctx.fillRect(x, 0, 36, H);
+          for (let y = 0; y < H; y += 72) ctx.fillRect(0, y, W, 36);
+          ctx.restore();
+        } else if (activeTheme === "kyoto35") {
+          // 35mm sprocket holes left & right
+          ctx.save();
+          ctx.fillStyle = "#0e0c14";
+          for (let y = 60; y < H - 40; y += 92) {
+            roundRectPath(ctx, 26, y, 44, 54, 10); ctx.fill();
+            roundRectPath(ctx, W - 70, y, 44, 54, 10); ctx.fill();
+          }
+          ctx.restore();
+        }
+
+        // 2. Header
+        ctx.save();
+        ctx.textAlign = "center";
+        ctx.fillStyle = cfg.acc;
+        ctx.font = '600 24px "Noto Sans JP", sans-serif';
+        ctx.fillText("お 守 り の 世 界", W / 2, 110);
+        ctx.fillStyle = cfg.ink;
+        ctx.font = '700 62px "Shippori Mincho", serif';
+        ctx.fillText("Omamori no Sekai", W / 2, 184);
+        ctx.fillStyle = cfg.muted;
+        ctx.font = '500 21px "Noto Sans JP", sans-serif';
+        ctx.fillText(cfg.sub, W / 2, 228);
+        ctx.restore();
+
+        // 3. Draw 3 Photos (slot positions tailored per theme)
+        const photoW = activeTheme === "kyoto35" ? 940 : 980;
+        const photoH = 735;
+        const startX = (W - photoW) / 2;
+        const ys = [285, 1085, 1885];
+        const tilts = activeTheme === "washi" ? [-0.028, 0.022, -0.02] : [0, 0, 0];
+
+        ys.forEach((py, idx) => {
+          ctx.save();
+          const cx = startX + photoW / 2;
+          const cy = py + photoH / 2;
+          ctx.translate(cx, cy);
+          ctx.rotate(tilts[idx]);
+
+          // Polaroid/card matte backing
+          const pad = activeTheme === "kyoto35" ? 10 : 22;
+          ctx.shadowColor = cfg.dark ? "rgba(0,0,0,0.45)" : "rgba(42,30,54,0.12)";
+          ctx.shadowBlur = 24;
+          ctx.shadowOffsetY = 10;
+          ctx.fillStyle = activeTheme === "kyoto35" ? "#292436" : "#ffffff";
+          if (activeTheme === "galeri" && idx === 0) {
+            archRectPath(ctx, -photoW / 2 - pad, -photoH / 2 - pad, photoW + pad * 2, photoH + pad * 2, 16);
+          } else {
+            roundRectPath(ctx, -photoW / 2 - pad, -photoH / 2 - pad, photoW + pad * 2, photoH + pad * 2, activeTheme === "kyoto35" ? 8 : 22);
+          }
+          ctx.fill();
+          ctx.shadowColor = "transparent";
+
+          // Clip photo area
+          ctx.save();
+          if (activeTheme === "galeri" && idx === 0) {
+            archRectPath(ctx, -photoW / 2, -photoH / 2, photoW, photoH, 10);
+          } else {
+            roundRectPath(ctx, -photoW / 2, -photoH / 2, photoW, photoH, activeTheme === "kyoto35" ? 4 : 14);
+          }
+          ctx.clip();
+          ctx.filter = fObj.css;
+          drawImageCover(ctx, photos[idx], -photoW / 2, -photoH / 2, photoW, photoH);
+          ctx.filter = "none";
+          ctx.restore();
+
+          // Theme-specific frame accents
+          if (activeTheme === "kyoto35") {
+            ctx.fillStyle = "#e8b996";
+            ctx.font = '600 22px monospace';
+            ctx.textAlign = "left";
+            ctx.fillText("0" + (idx + 1) + "A · OMAMORI 400", -photoW / 2 + 6, photoH / 2 + 34);
+            ctx.textAlign = "right";
+            ctx.fillText("'26 11 27", photoW / 2 - 6, photoH / 2 + 34);
+          } else if (activeTheme === "washi") {
+            const tapeSpecs = [
+              ["#cbbcf6", "stripe", -0.05],
+              ["#aad9f7", "dots", 0.04],
+              ["#f5b8d4", "grid", -0.04]
+            ];
+            const [tc, tp, tr] = tapeSpecs[idx];
+            drawWashiTape(ctx, 0, -photoH / 2 - 18, 220, 56, tc, tp, tr);
+          } else if (activeTheme === "galeri") {
+            ctx.strokeStyle = cfg.muted;
+            ctx.lineWidth = 2;
+            const m = 14;
+            const rx = photoW / 2 + 12;
+            const ry = photoH / 2 + 12;
+            ctx.beginPath(); ctx.moveTo(rx - m, ry); ctx.lineTo(rx + m, ry); ctx.moveTo(rx, ry - m); ctx.lineTo(rx, ry + m); ctx.stroke();
+          }
+
+          ctx.restore();
+        });
+
+        // 4. Theme-specific handcrafted vector stickers around the strip
+        if (activeTheme === "sakura") {
+          drawOmamoriSticker(ctx, 130, 315, 1.0, "#f5b8d5", "#c45788", "縁");
+          drawSakuraFlower(ctx, 1075, 290, 44, "#f7bed9", 0.2);
+          drawSakuraFlower(ctx, 1055, 1075, 36, "#f4a9cc", -0.4);
+          drawSakuraFlower(ctx, 128, 1895, 42, "#f7bed9", 0.5);
+          drawOmamoriSticker(ctx, 1072, 1920, 0.92, "#d8cdf9", "#6b54b5", "福");
+        } else if (activeTheme === "matcha") {
+          drawDangoSticker(ctx, 128, 340, 1.0, -0.32);
+          drawMatchaCup(ctx, 1070, 1110, 0.96);
+          drawDangoSticker(ctx, 1068, 1940, 0.9, 0.28);
+          drawOmamoriSticker(ctx, 130, 1915, 0.9, "#a7d6b4", "#3f7d5f", "健");
+        } else if (activeTheme === "neko") {
+          drawNekoSticker(ctx, 135, 320, 0.95);
+          drawOmamoriSticker(ctx, 1072, 1100, 0.95, "#f7c4c8", "#cc5c62", "福");
+          drawNekoSticker(ctx, 1062, 1920, 0.9);
+          drawSakuraFlower(ctx, 132, 1900, 38, "#f5b8c2", 0.3);
+        } else if (activeTheme === "furin") {
+          drawFurinSticker(ctx, 132, 330, 0.95);
+          drawFurinSticker(ctx, 1070, 1110, 0.9);
+          drawOmamoriSticker(ctx, 130, 1920, 0.92, "#b5daf9", "#3b76ad", "安");
+        } else if (activeTheme === "fuji") {
+          drawFujiSticker(ctx, 1060, 320, 0.9);
+          drawOmamoriSticker(ctx, 132, 1105, 0.92, "#d8cdf9", "#6b54b5", "運");
+          drawFujiSticker(ctx, 140, 1925, 0.85);
+          drawSakuraFlower(ctx, 1075, 1900, 36, "#e3d6fb", 0.25);
+        } else if (activeTheme === "ichigo") {
+          drawStrawberry(ctx, 130, 315, 1.05, -0.2);
+          drawStrawberry(ctx, 1072, 1100, 1.0, 0.25);
+          drawSakuraFlower(ctx, 130, 1110, 34, "#f9c5d5", 0.1);
+          drawStrawberry(ctx, 135, 1915, 0.95, 0.18);
+          drawOmamoriSticker(ctx, 1070, 1920, 0.92, "#f8bfd0", "#d14d72", "縁");
+        } else if (activeTheme === "galeri") {
+          // Vertical Japanese exhibition colophon
+          ctx.save();
+          ctx.fillStyle = cfg.muted;
+          ctx.font = '500 24px "Shippori Mincho", serif';
+          ctx.textAlign = "center";
+          "日本の伝統的なお守り".split("").forEach((ch, ci) => {
+            ctx.fillText(ch, 54, 420 + ci * 36);
+          });
+          ctx.restore();
+        }
+
+        // 5. Footer Area with Hanko Stamp, Exhibition Title, Auto Note & Real Scannable QR Code
+        const footY = 2720;
+        ctx.save();
+        ctx.strokeStyle = cfg.dark ? "rgba(255,255,255,0.16)" : "rgba(60,40,70,0.12)";
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(110, footY - 24); ctx.lineTo(W - 110, footY - 24); ctx.stroke();
+
+        // Left: Hanko + Title + Auto Caption
+        drawHanko(ctx, 178, footY + 128, 112, cfg.acc, cfg.hanko);
+
+        ctx.textAlign = "left";
+        ctx.fillStyle = cfg.ink;
+        ctx.font = '700 44px "Shippori Mincho", serif';
+        ctx.fillText("Omamori no Sekai", 268, footY + 94);
+
+        ctx.fillStyle = cfg.acc;
+        ctx.font = '600 24px "Noto Sans JP", sans-serif';
+        ctx.fillText("お守りの世界 · Taishu Bunka", 268, footY + 138);
+
+        ctx.fillStyle = cfg.muted;
+        ctx.font = '500 21px "Noto Sans JP", sans-serif';
+        ctx.fillText("Scan QR untuk buka panduan pameran", 268, footY + 184);
+        ctx.fillText("& rakit replika omamori sendiri", 268, footY + 216);
+
+        // Right: Real Scannable QR Code (260 x 260 px -> ultra crisp!)
+        const qrSize = 256;
+        drawQrCode(ctx, W - 110 - qrSize, footY + 2, qrSize, cfg.qrFg, cfg.qrBg);
+
+        ctx.textAlign = "center";
+        ctx.fillStyle = cfg.muted;
+        ctx.font = '500 18px "Noto Sans JP", sans-serif';
+        ctx.fillText("SCAN WEB PAMERAN", W - 110 - qrSize / 2, footY + qrSize + 28);
+        ctx.restore();
+
+        // Export crisp preview
+        stripPreviewImg.src = workCanvas.toDataURL("image/png");
+      }
+
+      btnDownload.addEventListener("click", () => {
+        const a = document.createElement("a");
+        a.download = "omamori-photostrip-" + activeTheme + ".png";
+        a.href = workCanvas.toDataURL("image/png");
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        showToast("Photostrip HD berhasil diunduh!");
+      });
+
+      // Init
+      buildFilterRails();
+      buildThemeRail();
+      updateSlotsUI();
+      startCamera();
+    })();
+  </script>
+</body>
+</html>

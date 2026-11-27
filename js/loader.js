@@ -1,5 +1,5 @@
 (function () {
-  const ASSET_VER = "10";
+  const ASSET_VER = "12";
 
   function withVer(url) {
     return url + (url.includes("?") ? "&" : "?") + "v=" + ASSET_VER;

@@ -3443,3 +3443,173 @@ footer {
 .booth-meta-grid {
   border-top: 1px solid var(--sakura-border);
 }
+/* =====================================================================
+   SECTION 08 · PHOTOBOX PROMO CARD (PINK PASTEL COLD BUBBLE)
+   ===================================================================== */
+.photobox-promo-card {
+  display: grid;
+  grid-template-columns: 1fr 196px;
+  gap: 28px;
+  align-items: center;
+  background: var(--shiro);
+  border: 1px solid var(--sakura-border);
+  border-radius: 26px;
+  padding: 28px;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.42s var(--ease-smooth), box-shadow 0.42s var(--ease-smooth), background-color 0.55s var(--ease-smooth);
+}
+
+.photobox-promo-card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.photobox-tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 12px;
+}
+
+.photobox-pill {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--shu);
+  background: var(--sakura);
+  border: 1px solid var(--sakura-border);
+  border-radius: 999px;
+  padding: 4px 11px;
+}
+
+.photobox-promo-info h3 {
+  font-family: "Shippori Mincho", serif;
+  font-size: 1.45rem;
+  color: var(--sumi);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.photobox-promo-info p {
+  font-size: 0.92rem;
+  color: var(--hai);
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.photobox-theme-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 20px;
+}
+
+.photobox-theme-chips span {
+  font-size: 0.74rem;
+  font-weight: 500;
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(120, 90, 120, 0.12);
+}
+
+.photobox-promo-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.photobox-privacy-note {
+  font-size: 0.76rem;
+  color: var(--hai);
+}
+
+/* Ilustrasi mini photostrip di sisi kanan */
+.photobox-mini-strip {
+  background: var(--sakura);
+  border: 1.5px solid var(--sakura-border);
+  border-radius: 16px;
+  padding: 12px 11px 10px;
+  box-shadow: 0 12px 28px rgba(108, 66, 102, 0.12);
+  transform: rotate(2.2deg);
+  transition: transform 0.45s var(--ease-spring);
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.photobox-promo-card:hover .photobox-mini-strip {
+  transform: rotate(0deg) translateY(-4px);
+}
+
+.mini-strip-head {
+  text-align: center;
+  line-height: 1.2;
+  padding-bottom: 2px;
+}
+
+.mini-strip-head span {
+  display: block;
+  font-size: 0.56rem;
+  color: var(--shu);
+  letter-spacing: 0.12em;
+}
+
+.mini-strip-head strong {
+  font-family: "Shippori Mincho", serif;
+  font-size: 0.72rem;
+  color: var(--sumi);
+}
+
+.mini-strip-slot {
+  height: 54px;
+  border-radius: 8px;
+  background: var(--shiro);
+  border: 1px solid var(--line-ghost);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Shippori Mincho", serif;
+  font-size: 0.8rem;
+  color: var(--hai);
+}
+
+.mini-strip-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 4px;
+  border-top: 1px dashed var(--sakura-border);
+}
+
+.mini-hanko {
+  font-family: "Shippori Mincho", serif;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--shu);
+  border: 1.5px solid var(--shu);
+  border-radius: 4px;
+  padding: 1px 4px;
+}
+
+.mini-qr-dot {
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: var(--sumi);
+  background: var(--shiro);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 2px 5px;
+}
+
+@media (max-width: 780px) {
+  .photobox-promo-card {
+    grid-template-columns: 1fr;
+    padding: 22px 18px;
+    gap: 20px;
+  }
+
+  .photobox-mini-strip {
+    max-width: 170px;
+    margin: 0 auto;
+    transform: rotate(0deg);
+  }
+}

@@ -1544,14 +1544,29 @@
     const total = activeQuizSet.length;
     if (triviaIdx === total - 1) {
       playChord();
-      const perfect = triviaScoreVal === total;
+      let stamp = "吉";
+      let desc = "";
+      if (triviaScoreVal === 0) {
+        stamp = "末吉";
+        desc = "Wah, belum ada yang pas nih, tapi nggak apa-apa! Anggap saja pemanasan sebelum baca-baca lagi isi pameran kami. Terima kasih sudah ikut mencoba kuisnya!";
+      } else if (triviaScoreVal <= 2) {
+        stamp = "小吉";
+        desc = "Lumayan buat awalan! Kamu sudah mulai kenalan sama dunia omamori. Coba intip lagi kartu 9 jenis atau etika di atas, terus coba ulang ya. Terima kasih sudah mampir!";
+      } else if (triviaScoreVal <= 4) {
+        stamp = "吉";
+        desc = "Bagus, wawasanmu soal omamori sudah cukup oke! Tinggal sedikit lagi buat menguasai semuanya. Terima kasih sudah ikut seru-seruan di stan kami!";
+      } else if (triviaScoreVal === 5) {
+        stamp = "中吉";
+        desc = "Dikit lagi sempurna, cuma meleset satu soal saja! Kamu teliti banget menyimak materi pameran hari ini. Terima kasih banyak sudah ikut kuisnya!";
+      } else {
+        stamp = "大吉";
+        desc = "Selamat, skor sempurna! Kamu sudah benar-benar paham sejarah, jenis, dan etika omamori hari ini. Terima kasih banyak sudah menyimak panduan kami!";
+      }
       openModal({
-        stamp: perfect ? "大吉" : triviaScoreVal >= Math.ceil(total / 2) ? "中吉" : "吉",
+        stamp: stamp,
         kicker: "Hasil Kuis Singkat Omamori",
         title: "Skor Kamu: " + triviaScoreVal + " dari " + total,
-        desc: perfect
-          ? "Luar biasa! Semua pertanyaan berhasil kamu jawab dengan tepat. Kamu sudah memahami budaya omamori dengan sangat baik."
-          : "Terima kasih sudah mencoba kuis singkat kami! Kamu bisa mengulang kuis atau langsung merakit replika omamori.",
+        desc: desc,
         actions: [
           { label: "Ulangi Kuis", primary: true, onClick: () => startNewQuizSession() },
           { label: "Tutup" }

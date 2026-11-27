@@ -1,0 +1,56 @@
+/* Scroll-reveal mulus di HP (tanpa blur biar enteng & anti lag) */
+.reveal,
+.reveal-item {
+  filter: none;
+  transform: translateY(32px) scale(0.985);
+  transition:
+    opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1) var(--stagger, 0ms),
+    transform 0.92s cubic-bezier(0.22, 1, 0.36, 1) var(--stagger, 0ms);
+  will-change: opacity, transform;
+}
+
+/* Blur tipis 1.5px di animasi scroll khusus layar laptop/desktop */
+@media (hover: hover) and (pointer: fine) {
+  .reveal,
+  .reveal-item {
+    filter: blur(1.5px);
+    transition:
+      opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1) var(--stagger, 0ms),
+      transform 0.92s cubic-bezier(0.22, 1, 0.36, 1) var(--stagger, 0ms),
+      filter 0.75s cubic-bezier(0.22, 1, 0.36, 1) var(--stagger, 0ms);
+  }
+}
+
+.reveal.visible,
+.reveal-item.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: none;
+}
+
+/* Kalau scroll balik ke atas, elemen meluncur halus dari atas */
+.reveal.from-top:not(.visible),
+.reveal-item.from-top:not(.visible) {
+  transform: translateY(-30px) scale(0.985);
+}
+
+/* Hilangkan jeda delay saat elemen di-reset di luar layar */
+.reveal:not(.visible),
+.reveal-item:not(.visible),
+section.reveal:not(.visible)::after {
+  transition-delay: 0ms;
+}
+
+/* Efek kaca buram tipis (5px) yang aman di header & pop-up modal */
+header {
+  background: var(--header-bg);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.modal-backdrop {
+  background: rgba(23, 20, 31, 0.44);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}

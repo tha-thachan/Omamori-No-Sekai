@@ -1,0 +1,140 @@
+<!-- 04 STUDIO RAKIT REPLIKA OMAMORI SENDIRI -->
+    <section id="rakit" class="reveal">
+      <div class="sec-header">
+        <div class="sec-index">04 · Interaktif<span>御守づくり</span></div>
+        <div>
+          <h2 class="sec-title">Rakit Replika Omamori Sendiri</h2>
+          <p class="sec-desc">Pilih warna kain, motif tenun, tali simpul, jenis doa, lalu tulis harapan pribadimu di kertas <em>ofuda</em> bagian dalam.</p>
+        </div>
+      </div>
+
+      <div class="studio-grid">
+        <div class="replica-stage">
+          <div class="replica-perspective">
+            <div class="replica-sway">
+              <div class="replica-3d" id="replica3d" role="button" tabindex="0" aria-label="Replika omamori, ketuk untuk membalik">
+                <div class="replica-face">
+                  <svg class="rep-cord-svg" id="repCordFront" viewBox="0 0 150 126" aria-hidden="true"></svg>
+                  <div class="replica-pouch-wrap">
+                    <div class="rep-pouch-body" id="repFront" data-pattern="seigaiha">
+                      <div class="rep-tag" id="repKanji">縁結び</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="replica-face replica-back">
+                  <svg class="rep-cord-svg" id="repCordBack" viewBox="0 0 150 126" aria-hidden="true"></svg>
+                  <div class="replica-pouch-wrap">
+                    <div class="rep-pouch-body" id="repBack" data-pattern="seigaiha">
+                      <div class="rep-ofuda">
+                        <span class="rep-ofuda-label">Ofuda · Harapanmu</span>
+                        <div class="rep-ofuda-wish" id="repWishDisplay">Semoga tugas dan ujian semester ini lancar, nilai aman, dan tetap sempat istirahat.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="rep-caption" id="repSummary">Kain Sakura · Motif Seigaiha · En-musubi</div>
+          <div class="rep-actions">
+            <button type="button" class="ctrl-btn" id="btnRepFlip">Balik Depan / Belakang ↻</button>
+            <button type="button" class="ctrl-btn" id="btnRepSpin">Putar 360°</button>
+            <button type="button" class="ctrl-btn" id="btnRepRandom">Acak Desain</button>
+            <button type="button" class="ctrl-btn" id="btnRepPopup">Lihat Kartu Pop-Up</button>
+            <button type="button" class="ctrl-btn" id="btnRepDownload" style="background:var(--sumi);color:var(--kinari);border-color:var(--sumi);">Unduh Replika (PNG)</button>
+          </div>
+        </div>
+
+        <div class="studio-controls">
+          <div class="ctrl-group">
+            <label>1. Warna Kain (9 Pilihan + Custom)</label>
+            <div class="option-row" id="fabricOpts">
+              <button type="button" class="opt-chip active" data-fabric="sakura"><span class="swatch" style="background:#edd2d5;"></span>Sakura</button>
+              <button type="button" class="opt-chip" data-fabric="matcha"><span class="swatch" style="background:#d5e2ce;"></span>Matcha</button>
+              <button type="button" class="opt-chip" data-fabric="asagi"><span class="swatch" style="background:#cee0ea;"></span>Asagi</button>
+              <button type="button" class="opt-chip" data-fabric="kuchinashi"><span class="swatch" style="background:#efe1be;"></span>Kuchinashi</button>
+              <button type="button" class="opt-chip" data-fabric="fuji"><span class="swatch" style="background:#dfd6e8;"></span>Fuji</button>
+              <button type="button" class="opt-chip" data-fabric="sango"><span class="swatch" style="background:#f0cfc2;"></span>Sango</button>
+              <button type="button" class="opt-chip" data-fabric="wakakusa"><span class="swatch" style="background:#dce6c6;"></span>Wakakusa</button>
+              <button type="button" class="opt-chip" data-fabric="shironeri"><span class="swatch" style="background:#edeae2;"></span>Shironeri</button>
+              <button type="button" class="opt-chip" data-fabric="sumi"><span class="swatch" style="background:#38332f;"></span>Sumi</button>
+              <label class="custom-color-chip" id="customFabricWrap" title="Pilih warna kain bebas">
+                <input type="color" id="customFabricInput" value="#e2c8d8" aria-label="Warna kain custom" />
+                <span>Custom</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="ctrl-group">
+            <label>2. Motif Kain (9 Pola Tradisional)</label>
+            <div class="option-row" id="patternOpts">
+              <button type="button" class="opt-chip active" data-pattern="seigaiha">Seigaiha</button>
+              <button type="button" class="opt-chip" data-pattern="asanoha">Asanoha</button>
+              <button type="button" class="opt-chip" data-pattern="ichimatsu">Ichimatsu</button>
+              <button type="button" class="opt-chip" data-pattern="shippo">Shippō</button>
+              <button type="button" class="opt-chip" data-pattern="kikko">Kikkō</button>
+              <button type="button" class="opt-chip" data-pattern="yagasuri">Yagasuri</button>
+              <button type="button" class="opt-chip" data-pattern="tenun">Tenun Garis</button>
+              <button type="button" class="opt-chip" data-pattern="bintik">Bintik Halus</button>
+              <button type="button" class="opt-chip" data-pattern="polos">Polos Washi</button>
+            </div>
+          </div>
+
+          <div class="ctrl-group">
+            <label>3. Warna Tali Simpul (9 Pilihan + Custom)</label>
+            <div class="option-row" id="cordOpts">
+              <button type="button" class="opt-chip active" data-cord="#b84a39"><span class="swatch" style="background:#b84a39;"></span>Merah Bata</button>
+              <button type="button" class="opt-chip" data-cord="#b89347"><span class="swatch" style="background:#b89347;"></span>Emas Pucat</button>
+              <button type="button" class="opt-chip" data-cord="#3e5e78"><span class="swatch" style="background:#3e5e78;"></span>Indigo</button>
+              <button type="button" class="opt-chip" data-cord="#c27885"><span class="swatch" style="background:#c27885;"></span>Sakura Tua</button>
+              <button type="button" class="opt-chip" data-cord="#5d7d57"><span class="swatch" style="background:#5d7d57;"></span>Matcha Tua</button>
+              <button type="button" class="opt-chip" data-cord="#7b6594"><span class="swatch" style="background:#7b6594;"></span>Ungu Fuji</button>
+              <button type="button" class="opt-chip" data-cord="#7c5a44"><span class="swatch" style="background:#7c5a44;"></span>Kayu</button>
+              <button type="button" class="opt-chip" data-cord="#d6c8b6"><span class="swatch" style="background:#d6c8b6;"></span>Krem Gading</button>
+              <button type="button" class="opt-chip" data-cord="#2c2926"><span class="swatch" style="background:#2c2926;"></span>Hitam Sumi</button>
+              <label class="custom-color-chip" id="customCordWrap" title="Pilih warna tali bebas">
+                <input type="color" id="customCordInput" value="#c86b58" aria-label="Warna tali custom" />
+                <span>Custom</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="ctrl-group">
+            <label>4. Model Simpul &amp; Tali (4 Gaya Tradisional)</label>
+            <div class="option-row" id="knotOpts">
+              <button type="button" class="opt-chip active" data-knot="nijukano">Nijūkanō (Klasik)</button>
+              <button type="button" class="opt-chip" data-knot="sakura">Tali Kepang + Sakura</button>
+              <button type="button" class="opt-chip" data-knot="ume">Ume-musubi (Bunga Plum)</button>
+              <button type="button" class="opt-chip" data-knot="tassel">Simpul + Rumbai</button>
+            </div>
+          </div>
+
+          <div class="ctrl-group">
+            <label for="repBlessingSelect">5. Jenis Doa &amp; Kanji</label>
+            <select id="repBlessingSelect" class="studio-select">
+              <option value="縁結び|En-musubi">縁結び : En-musubi (Jodoh &amp; Relasi Baik)</option>
+              <option value="学業成就|Gakugyō-jōju">学業成就 : Gakugyō-jōju (Belajar &amp; Ujian)</option>
+              <option value="商売繁盛|Shōbai-hanjō">商売繁盛 : Shōbai-hanjō (Usaha &amp; Karier)</option>
+              <option value="家内安全|Kanai-anzen">家内安全 : Kanai-anzen (Keselamatan Keluarga)</option>
+              <option value="安産|Anzan">安産 : Anzan (Kelancaran Persalinan)</option>
+              <option value="交通安全|Kōtsū-anzen">交通安全 : Kōtsū-anzen (Keselamatan Jalan)</option>
+              <option value="健康祈願|Kenkō-kigan">健康祈願 : Kenkō-kigan (Kesehatan Harian)</option>
+              <option value="病気平癒|Byōki-heiyu">病気平癒 : Byōki-heiyu (Pemulihan Sakit)</option>
+              <option value="開運厄除|Yakuyoke · Kaiun">開運厄除 : Yakuyoke &amp; Kaiun (Penolak Bala &amp; Hoki)</option>
+            </select>
+          </div>
+
+          <div class="ctrl-group">
+            <label for="repWishInput">6. Tulis Harapanmu (terlihat saat replika dibalik)</label>
+            <input
+              id="repWishInput"
+              type="text"
+              maxlength="70"
+              class="studio-input"
+              placeholder="Contoh: Semoga ujian semester ini lancar dan nilainya memuaskan"
+              value="Semoga tugas dan ujian semester ini lancar, nilai aman, dan tetap sempat istirahat."
+            />
+          </div>
+        </div>
+      </div>
+    </section>

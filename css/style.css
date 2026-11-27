@@ -3187,144 +3187,72 @@ footer {
   background: var(--shiro);
   box-shadow: var(--shadow-soft);
 }
-/* === Layout Profil Tim Editorial (Bingkai Foto 1:1 HD Serasi) === */
-.team-section-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-top: 26px;
-  margin-bottom: 14px;
-}
-
-.team-kicker {
-  font-size: 0.76rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--shu);
-  font-weight: 600;
-}
-
-.team-sub {
-  font-size: 0.78rem;
-  color: var(--hai);
-}
-
+/* === Layout Profil Tim Model Awal (Avatar Bulat Serasi + Tepi Bubble Lembut) === */
 .team-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-  margin-top: 0;
+  gap: 14px;
+  margin-top: 22px;
 }
 
 .member-card {
   background: var(--shiro);
-  border: 1px solid var(--line-ghost);
-  border-radius: 18px;
-  padding: 12px 12px 16px;
+  border: 1px solid var(--sakura-border);
+  border-radius: 20px;
+  padding: 15px 14px;
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 12px;
-  text-align: center;
+  flex-direction: row;
+  align-items: center;
+  gap: 13px;
+  text-align: left;
   box-shadow: var(--shadow-soft);
-  transition: transform 0.42s var(--ease-spring), box-shadow 0.42s var(--ease-smooth), border-color 0.35s var(--ease-smooth), background-color 0.55s var(--ease-smooth);
+  transition: transform 0.38s var(--ease-spring), box-shadow 0.38s var(--ease-smooth), border-color 0.3s var(--ease-smooth), background-color 0.55s var(--ease-smooth);
 }
 
 .member-card:hover {
-  transform: translateY(-5px);
-  border-color: var(--asagi-border);
+  transform: translateY(-3px);
+  border-color: var(--shu);
   box-shadow: var(--shadow-hover);
 }
 
-.member-frame {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 13px;
-  overflow: hidden;
-  background: var(--kinari);
-  border: 1px solid var(--line-soft);
-}
-
 .member-photo {
-  width: 100%;
-  height: 100%;
-  border-radius: 0;
-  border: none;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
   object-fit: cover;
-  object-position: center 25%;
+  object-position: center 42%;
+  border: 2px solid var(--sakura-border);
+  flex-shrink: 0;
+  background: var(--kinari);
   display: block;
-  transition: transform 0.65s var(--ease-smooth);
+  transition: transform 0.45s var(--ease-spring), border-color 0.3s var(--ease-smooth);
 }
 
 .member-card:hover .member-photo {
-  transform: scale(1.04);
-}
-
-.member-badge {
-  position: absolute;
-  top: 9px;
-  left: 9px;
-  font-family: "Shippori Mincho", serif;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: var(--shiro);
-  color: var(--shu);
-  border: 1px solid var(--line-ghost);
-  box-shadow: 0 3px 10px rgba(31, 36, 51, 0.08);
-}
-
-.member-info {
-  padding: 0 4px;
+  transform: scale(1.06);
+  border-color: var(--shu);
 }
 
 .member-info h3 {
   font-family: "Shippori Mincho", serif;
-  font-size: 0.96rem;
+  font-size: 0.94rem;
   color: var(--sumi);
-  line-height: 1.35;
+  line-height: 1.32;
   margin-bottom: 3px;
 }
 
 .member-nim {
-  font-size: 0.74rem;
-  letter-spacing: 0.08em;
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
   color: var(--hai);
 }
 
-@media (max-width: 720px) {
+@media (max-width: 780px) {
   .team-grid {
     grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
-  .member-card {
-    flex-direction: row;
-    align-items: center;
-    text-align: left;
-    padding: 12px;
-    gap: 14px;
-  }
-
-  .member-frame {
-    width: 84px;
-    height: 84px;
-    flex-shrink: 0;
-    border-radius: 12px;
-  }
-
-  .member-badge {
-    top: 5px;
-    left: 5px;
-    font-size: 0.64rem;
-    padding: 1px 6px;
   }
 }
+
 /* Highlight ringkas asal-usul era pada bagian 02 Linimasa */
 .era-origin {
   font-size: 0.85rem;
@@ -3446,10 +3374,6 @@ footer {
 .member-card {
   border-radius: 22px;
   border: 1px solid var(--sakura-border);
-}
-
-.member-frame {
-  border-radius: 16px;
 }
 
 /* Daftar era di samping: sudut halus tanpa kotak tajam */
